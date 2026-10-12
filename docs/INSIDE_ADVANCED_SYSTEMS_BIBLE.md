@@ -170,7 +170,7 @@ stateDiagram-v2
 
 ## MODULE 4: BỘ SHADER ĐỒ HỌA "THE PLAYDEAD LOOK"
 
-INSIDE sử dụng bảng màu 8-bit lập chỉ mục (8-bit Grayscale Index) phối hợp cùng các bảng màu Palette 1D (trích xuất tại `extracted_inside_assets/textures/`).
+INSIDE sử dụng bảng màu 8-bit lập chỉ mục (8-bit Grayscale Index) phối hợp cùng các bảng màu Palette 1D (trích xuất tại `games/inside/extracted_assets/textures/`).
 
 ```mermaid
 graph LR
