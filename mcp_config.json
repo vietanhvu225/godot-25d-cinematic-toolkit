@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "godot": {
+      "command": "python",
+      "args": [
+        "addons/gamedev_ai/mcp/godot_mcp.py"
+      ],
+      "env": {
+        "GODOT_HOST": "127.0.0.1",
+        "GODOT_PORT": "6543"
+      }
+    }
+  }
+}
