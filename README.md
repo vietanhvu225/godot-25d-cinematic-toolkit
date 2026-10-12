@@ -134,14 +134,25 @@ Bộ công cụ này được thiết kế theo tư duy **AI-Native Game Develop
 
 ---
 
-### 🛡️ 5.4. Công Cụ Đồng Hành Quản Trị Git: `Gitot` (Asset #5522)
+### 🛡️ 5.4. Công Cụ Đồng Hành Quản Trị Git & LFS: `Gitot` (Asset #5522)
 
-Để quy trình phát triển hoàn chỉnh từ A-Z ngay trong Godot 4.7.2, dự án đề xuất sử dụng kèm:
-- **`SigKdev/godot-gitot`** ([Asset #5522](https://godotengine.org/asset-library/asset/5522)): Tiện ích Git đồ họa thuần GDScript chạy trực tiếp trong Editor.
-- **Tính năng sống còn:**
-  - **Large-File Guard:** Ngăn chặn vô tình commit file 3D/Audio nặng vào Git thường, hỗ trợ 1-click đưa sang Git LFS.
-  - **Diff Gutter:** Hiển thị vạch màu xanh lá / cam ngay lề mã nguồn GDScript khi AI vừa sửa code.
-  - **Branch Switch Scene Reload:** Đổi nhánh không cần tắt mở lại Godot.
+Trong quá trình khảo sát, chúng tôi phân tích công cụ [**`SigKdev/godot-gitot`**](https://github.com/SigKdev/godot-gitot) ([Godot Asset Library #5522](https://godotengine.org/asset-library/asset/5522)) và xác định đây là **mảnh ghép quản trị phiên bản tối quan trọng** khi làm game trên Godot 4.7.2:
+
+#### 1. Bản chất & Nỗi đau của Godot VCS mặc định:
+* Godot có hệ thống Git tích hợp sẵn (`godot-git-plugin`), nhưng dựa trên thư viện C++ `libgit2`. Plugin này nổi tiếng là thường xuyên bị crash hoặc hỏng kết nối mỗi khi Godot ra bản cập nhật mới, đồng thời việc cấu hình SSH Key trên Windows rất phức tạp.
+* **Giải pháp của Gitot:** Viết bằng **100% thuần GDScript (Pure GDScript)**, tương tác thẳng với file `git.exe` của hệ điều hành thông qua lệnh `OS.execute()`. Do đó, nếu terminal trên máy bạn gõ được lệnh `git`, Gitot sẽ chạy ngay lập tức mà không cần cấu hình lại SSH hay token.
+
+#### 2. Bộ 5 tính năng "cứu cánh" cho Game Developer & AI Workflow:
+1. **Large-File Guard & Git LFS tự động:** Khi làm game, dev thường kéo thả các file 3D (`.blend`, `.obj`), âm thanh (`.wav`) hoặc texture nặng từ $50\text{MB} - 500\text{MB}$. Gitot có cơ chế tự động chặn không cho commit file vượt ngưỡng quy định vào Git thường (tránh làm nổ dung lượng repo), đồng thời cung cấp nút **"Track with LFS"** 1-click.
+2. **Color Diff Gutter thời gian thực:** Lề trái của trình soạn thảo mã nguồn Godot (Gutter) tự động đổi màu: **xanh lá** cho dòng mới viết, **cam** cho dòng AI vừa sửa. Bấm vào vạch màu là mở ngay bảng so sánh Unified Diff chi tiết.
+3. **Chuyển nhánh tự động làm mới Scene (Branch Switch Auto-Reload):** Khi chuyển đổi qua lại giữa các branch tính năng, các file Scene (`.tscn`) đang mở sẽ tự động nạp lại trạng thái mới mà không bắt buộc bạn phải khởi động lại Godot.
+4. **Stash Manager (Shelf):** Cho phép "cất nháp" toàn bộ thay đổi thử nghiệm của AI vào ngăn kéo an toàn chỉ với 1 cú click.
+5. **Độ tin cậy được kiểm chứng:** Phiên bản v0.17.0 được xây dựng và kiểm thử trực tiếp trên đúng bản **Godot 4.7.2**, vượt qua bộ test tự động [GdUnit4](https://github.com/MikeSchulze/gdUnit4) với **22 test suites, 179 tests, 0 failures**.
+
+> [!TIP]
+> **Mô hình phối hợp chuẩn mực cho dự án:**
+> - **Lập trình & Điều khiển AI (MCP):** [`fredarts/gamedev_ai`](https://github.com/fredarts/gamedev_ai) (Kết nối Antigravity qua cổng `6543`).
+> - **Quản trị mã nguồn & Bảo vệ dung lượng (VCS):** [`SigKdev/godot-gitot`](https://github.com/SigKdev/godot-gitot) (Quản trị commit, LFS và diff trực tiếp trong Godot).
 
 ---
 
