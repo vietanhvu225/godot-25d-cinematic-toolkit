@@ -2,7 +2,7 @@
 
 [![Godot Version](https://img.shields.io/badge/Godot-4.7%2B-478CBF?logo=godot-engine&logoColor=white)](https://godotengine.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![MCP Protocol](https://img.shields.io/badge/MCP-Antigravity%20%2F%20Cursor%20Ready-purple.svg)](#-ai-pair-programming-via-mcp)
+[![MCP Protocol](https://img.shields.io/badge/MCP-Antigravity%20%2F%20Cursor%20Ready-purple.svg)](#-hệ-sinh-thái-mcp--ai-pair-programming-antigravity--cursor)
 [![Clean Room](https://img.shields.io/badge/Design-Clean--Room%20Reimplementation-blue.svg)](https://github.com/vietanhvu225/inside-engine-deconstruction)
 
 > **Bộ khung làm game phiêu lưu giải đố 2.5D điện ảnh (Cinematic Puzzle-Platformer) hoàn chỉnh cho Godot 4.7+.**  
@@ -15,9 +15,10 @@
 2. [Hệ Thống Phím Bấm Điều Khiển (Input Controls)](#-hệ-thống-phím-bấm-điều-khiển)
 3. [Tổng Quan 6 Module Kỹ Thuật Chuyên Sâu](#-tổng-quan-6-module-kỹ-thuật-chuyên-sâu)
 4. [Bộ 3 Shaders Thẩm Mỹ "Playdead Look"](#-bộ-3-shaders-thẩm-mỹ-playdead-look)
-5. [Cấu Hình AI Pair-Programming Qua MCP (Antigravity / Cursor)](#-cấu-hình-ai-pair-programming-qua-mcp)
+5. [Hệ Sinh Thái MCP & AI Pair-Programming (Antigravity / Cursor)](#-hệ-sinh-thái-mcp--ai-pair-programming-antigravity--cursor)
 6. [Cấu Trúc Thư Mục Dự Án (Project Hierarchy)](#-cấu-trúc-thư-mục-dự-án)
 7. [Tài Liệu Kỹ Thuật Đi Kèm (Technical Bibles)](#-tài-liệu-kỹ-thuật-đi-kèm)
+
 
 ---
 
@@ -96,13 +97,59 @@ Toàn bộ logic được chia thành các script GDScript mô-đun hóa cao, d�
 
 ---
 
-## 🤖 CẤU HÌNH AI PAIR-PROGRAMMING QUA MCP
+## 🤖 HỆ SINH THÁI MCP & AI PAIR-PROGRAMMING (ANTIGRAVITY / CURSOR)
 
-Bộ công cụ này được thiết kế để bạn lập trình cặp (Pair-Programming) cùng AI Agent (Google Antigravity, Cursor, Claude Code) thông qua giao thức **Model Context Protocol (MCP)**:
+Bộ công cụ này được thiết kế theo tư duy **AI-Native Game Development**: lập trình viên phát triển song hành cùng AI Agent (Google Antigravity, Cursor, Claude Code) thông qua giao thức mở **Model Context Protocol (MCP)**.
 
-### Cách kích hoạt:
-1. Đảm bảo máy tính có Python 3.10+ (hoặc trỏ tới đường dẫn Python trên máy bạn).
+### 🔍 5.1. Hành Trình Tuyển Chọn Giải Pháp MCP (Từ Gốc Đến Đích)
+
+Để tìm ra giải pháp tối ưu cho Godot 4.7+, chúng tôi đã thực hiện nghiên cứu chuyên sâu qua 2 vòng sàng lọc khắt khe:
+
+* **Vòng 1 (GitHub Ecosystem Scan):** Khảo sát các repo MCP độc lập phổ biến (`Coding-Solo/godot-mcp`, `hi-godot/godot-ai`, `ee0pdt/Godot-MCP`, `IvanMurzak/Godot-MCP`). Nhận thấy đa số giải pháp chỉ hỗ trợ Godot 4.2/4.3 cũ, thiếu cơ chế xác thực hoặc thiếu UI tương tác trực quan trong Editor.
+* **Vòng 2 (Official Godot Asset Library Deep-Dive):** Quét toàn bộ các công cụ đã qua kiểm duyệt trên Godot Asset Library (#5086, #5375, #5369, #5193, #5482, #5522). Phát hiện ra các giải pháp thế hệ mới đột phá về độ tương thích Godot 4.7+, tính an toàn và khả năng gỡ lỗi.
+
+---
+
+### 📊 5.2. BẢNG SO SÁNH ROUND 2 VỚI CÁC ỨNG VIÊN ROUND 1
+
+| Tiêu chí kỹ thuật | `fredarts/gamedev_ai` (#5086) ⭐ | `NPGameDev/godot-mcp-toolkit` (#5375) | `TomasLucas/godot-mcp-bridge` (#5369) | `wgt19861219/godot-mcp-enhanced` (#5193) | `hi-godot/godot-ai` (Round 1) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Độ tương thích Godot 4.7.2** | **⭐⭐⭐⭐⭐ (Native 4.7+)** | ⭐⭐⭐⭐☆ (4.2+) | ⭐⭐⭐⭐☆ (4.5+) | ⭐⭐⭐⭐☆ (4.3+) | ⭐⭐⭐⭐☆ (4.3+) |
+| **Kiểm duyệt trên Asset Library** | **✅ Có (ID 5086)** | **✅ Có (ID 5375)** | **✅ Có (ID 5369)** | **✅ Có (ID 5193)** | ❌ Chưa (GitHub only) |
+| **Giao diện Editor UI tích hợp** | **✅ AI Dock + Visual Diff** | ❌ Không (Thuần MCP) | ❌ Không (Thuần MCP) | ⚠️ Dock tối giản | ⚠️ Chỉ có status dock |
+| **Khả năng Step-Debugging** | ⚠️ Đọc log console | ⚠️ Đọc log console | **✅ Đặt Breakpoint DAP** | ⚠️ QA Assertions & GIF | ⚠️ Đọc log console |
+| **Tối ưu hóa Token LLM** | ⭐⭐⭐⭐☆ (30+ Tools) | ⭐⭐⭐☆☆ (150+ Tools) | ⭐⭐⭐☆☆ (231 Tools) | ⭐⭐⭐⭐☆ (46 Tools/272 Actions) | **⭐⭐⭐⭐⭐ (Domain Rollups)** |
+| **Hỗ trợ Antigravity rõ ràng** | **✅ Nêu danh trong Docs** | ✅ Tương thích chung | ✅ Tương thích chung | ✅ Tương thích chung | ✅ Tương thích chung |
+| **Trọng tâm kiến trúc** | **Authoring + Safe Diff + Watch Mode** | Pure MCP Operations | Bi-directional Awareness + DAP | Closed-Loop QA + Auto GIF | Token-optimized Viewport |
+
+---
+
+### 🎯 5.3. Rationale: Tại Sao Chọn `fredarts/gamedev_ai` (#5086) Làm Giải Pháp Trọng Tâm?
+
+1. **Khớp phiên bản 100% (Godot 4.7+):** Đây là công cụ hiếm hoi trên Asset Library gắn nhãn chính thức hỗ trợ **Godot 4.7+**, không bị lỗi deprecation warning của GDScript mới.
+2. **Hỗ trợ chính thức Google Antigravity & Cursor:** Tài liệu kỹ thuật của tác giả ghi nhận chuẩn Stdio Bridge qua file Python `godot_mcp.py` kết nối trực tiếp vào JSON-RPC Server nội bộ cổng `6543`.
+3. **Mô hình "Dual-Workspace" an toàn nhất:**
+   - **Bên ngoài:** Antigravity có thể tự động tạo node, nối signal, sửa script theo vùng chọn.
+   - **Bên trong:** Godot hiển thị bảng **Safe Visual Diff** (màu xanh/đỏ) để bạn bấm `Accept` hoặc `Reject` trước khi áp dụng, kèm **Watch Mode** tự động phát hiện lỗi crash ở tab Output để đề xuất sửa lỗi tức thì.
+
+---
+
+### 🛡️ 5.4. Công Cụ Đồng Hành Quản Trị Git: `Gitot` (Asset #5522)
+
+Để quy trình phát triển hoàn chỉnh từ A-Z ngay trong Godot 4.7.2, dự án đề xuất sử dụng kèm:
+- **`SigKdev/godot-gitot`** ([Asset #5522](https://godotengine.org/asset-library/asset/5522)): Tiện ích Git đồ họa thuần GDScript chạy trực tiếp trong Editor.
+- **Tính năng sống còn:**
+  - **Large-File Guard:** Ngăn chặn vô tình commit file 3D/Audio nặng vào Git thường, hỗ trợ 1-click đưa sang Git LFS.
+  - **Diff Gutter:** Hiển thị vạch màu xanh lá / cam ngay lề mã nguồn GDScript khi AI vừa sửa code.
+  - **Branch Switch Scene Reload:** Đổi nhánh không cần tắt mở lại Godot.
+
+---
+
+### ⚙️ 5.5. Hướng Dẫn Cấu Hình MCP Cho Antigravity / Cursor
+
+1. Đảm bảo máy tính đã cài Python 3.10+ (hoặc trỏ tới đường dẫn Python trên máy bạn).
 2. Mở file cấu hình MCP của IDE (ví dụ: `mcp_config.json`):
+
 ```json
 {
   "mcpServers": {
@@ -119,7 +166,9 @@ Bộ công cụ này được thiết kế để bạn lập trình cặp (Pair-
   }
 }
 ```
-3. Khởi động plugin trong Godot: AI Agent bên ngoài sẽ tự động nhận diện cây Scene Tree đang mở, hỗ trợ tạo Node, kiểm tra lỗi LSP thời gian thực và tự sửa bug console.
+
+3. Khởi động plugin trong Godot: AI Agent bên ngoài sẽ tự động nhận diện cây Scene Tree đang mở, hỗ trợ tạo Node, kiểm tra lỗi LSP thời gian thực và đồng hành cùng bạn!
+
 
 ---
 
