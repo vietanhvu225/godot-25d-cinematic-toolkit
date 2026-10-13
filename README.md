@@ -1,165 +1,174 @@
 # 🎮 Godot 2.5D Cinematic Platformer Toolkit (INSIDE-Style)
 
+🌐 **English** | [Tiếng Việt](README.vi.md)
+
 [![Godot Version](https://img.shields.io/badge/Godot-4.7%2B-478CBF?logo=godot-engine&logoColor=white)](https://godotengine.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![MCP Protocol](https://img.shields.io/badge/MCP-Antigravity%20%2F%20Cursor%20Ready-purple.svg)](#-hệ-sinh-thái-mcp--ai-pair-programming-antigravity--cursor)
+[![MCP Protocol](https://img.shields.io/badge/MCP-Antigravity%20%2F%20Cursor%20Ready-purple.svg)](#-mcp-ecosystem--ai-pair-programming-antigravity--cursor)
 [![Clean Room](https://img.shields.io/badge/Design-Clean--Room%20Reimplementation-blue.svg)](https://github.com/vietanhvu225/inside-engine-deconstruction)
 
-> **Bộ khung làm game phiêu lưu giải đố 2.5D điện ảnh (Cinematic Puzzle-Platformer) hoàn chỉnh cho Godot 4.7+.**  
-> Tái hiện chuẩn xác phong cách điều khiển, hoạt ảnh thủ tục (Procedural Animation), camera điện ảnh và ánh sáng đặc trưng của *INSIDE / LIMBO / Little Nightmares*, tích hợp sẵn quy trình hỗ trợ AI Agent qua **Model Context Protocol (MCP)**.
+> **A complete framework for building 2.5D cinematic puzzle-platformers in Godot 4.7+.**  
+> Aims to recreate the controls, procedural animation, cinematic camera and signature lighting of *INSIDE / LIMBO / Little Nightmares*, with an optional AI-agent workflow over the **Model Context Protocol (MCP)**.
 
 ---
 
-## 📌 MỤC LỤC
-1. [Khởi Động Nhanh Trên Mọi Máy Tính (Quickstart)](#-khởi-động-nhanh-trên-mọi-máy-tính-quickstart)
-2. [Hệ Thống Phím Bấm Điều Khiển (Input Controls)](#-hệ-thống-phím-bấm-điều-khiển)
-3. [Tổng Quan 6 Module Kỹ Thuật Chuyên Sâu](#-tổng-quan-6-module-kỹ-thuật-chuyên-sâu)
-4. [Bộ 3 Shaders Thẩm Mỹ "Playdead Look"](#-bộ-3-shaders-thẩm-mỹ-playdead-look)
-5. [Hệ Sinh Thái MCP & AI Pair-Programming (Antigravity / Cursor)](#-hệ-sinh-thái-mcp--ai-pair-programming-antigravity--cursor)
-6. [Cấu Trúc Thư Mục Dự Án (Project Hierarchy)](#-cấu-trúc-thư-mục-dự-án)
-7. [Tài Liệu Kỹ Thuật Đi Kèm (Technical Bibles)](#-tài-liệu-kỹ-thuật-đi-kèm)
+## 📌 TABLE OF CONTENTS
+1. [Quickstart on Any Machine](#-quickstart-on-any-machine)
+2. [Input Controls](#-input-controls)
+3. [Overview of the 6 Core Technical Modules](#-overview-of-the-6-core-technical-modules)
+4. [The 3 "Playdead Look" Shaders](#-the-3-playdead-look-shaders)
+5. [MCP Ecosystem & AI Pair-Programming (Antigravity / Cursor)](#-mcp-ecosystem--ai-pair-programming-antigravity--cursor)
+6. [Project Structure](#-project-structure)
+7. [Companion Technical Docs](#-companion-technical-docs)
 
 
 ---
 
-## 🚀 KHỞI ĐỘNG NHANH TRÊN MỌI MÁY TÍNH (QUICKSTART)
+## 🚀 QUICKSTART ON ANY MACHINE
 
-Dự án này là một **Godot Project độc lập**, không phụ thuộc vào plugin trả phí hay runtime phức tạp. Bạn có thể clone về bất kỳ máy tính nào (Windows, macOS, Linux) và chạy ngay:
+This is a **standalone Godot project** with no paid plugins or complex runtime dependencies. Clone it onto any machine (Windows, macOS, Linux) and run it right away:
 
-### 1. Chuẩn bị Engine:
-* Tải [Godot Engine 4.7+ (Standard Version)](https://godotengine.org/download) — Không cần bản .NET/C#.
+### 1. Get the engine:
+* Download [Godot Engine 4.7+ (Standard Version)](https://godotengine.org/download). The .NET/C# build is not required.
 
-### 2. Tải mã nguồn:
+### 2. Get the source:
 ```bash
 git clone https://github.com/vietanhvu225/godot-25d-cinematic-toolkit.git
 cd godot-25d-cinematic-toolkit
 ```
 
-### 3. Mở & Chạy thử:
-1. Mở Godot Engine, bấm **Import**, trỏ vào thư mục vừa clone và chọn file `project.godot`.
-2. Bấm nút **Play (F5)** trên góc phải (hoặc mở scene [`scenes/test_gym.tscn`](scenes/test_gym.tscn)).
-3. Trải nghiệm ngay phòng gym thử nghiệm vật lý với:
-   - Nhân vật nhảy qua vực, bám dốc bằng Raycast Foot IK.
-   - Đẩy/kéo khối hộp vật lý.
-   - Vùng chuyển góc máy Cinematic Camera Blend Box ($32^\circ \leftrightarrow 42^\circ$ FOV).
+### 3. Open & run:
+1. Open Godot Engine, click **Import**, point it at the cloned folder and select `project.godot`.
+2. Press **Play (F5)** in the top-right corner (or open the scene [`scenes/test_gym.tscn`](scenes/test_gym.tscn)).
+3. Try out the physics test gym, featuring:
+   - A character jumping over gaps and gripping slopes with Raycast Foot IK.
+   - Pushing/pulling physics boxes.
+   - A Cinematic Camera Blend Box zone ($32^\circ \leftrightarrow 42^\circ$ FOV).
 
 ---
 
-## 🕹️ HỆ THỐNG PHÍM BẤM ĐIỀU KHIỂN
+## 🕹️ INPUT CONTROLS
 
-| Hành động (Action) | Bàn phím (Keyboard) | Tay cầm (Gamepad) | Mô tả cơ chế |
+| Action | Keyboard | Gamepad | Mechanics |
 | :--- | :--- | :--- | :--- |
-| **Di chuyển Trái/Phải** | `A` / `D` hoặc `←` / `→` | D-Pad / Cần Left Stick | Khóa cứng trục $Z=0.0$, quán tính trượt chân $0.18\text{s}$. |
-| **Nhảy (Jump)** | `Space` hoặc `W` / `↑` | Nút `A` (Xbox) / `✕` (PS) | Lực nhảy $5.2\text{m/s}$, hỗ trợ Coyote Time ($120\text{ms}$) & Buffer ($150\text{ms}$). |
-| **Chạy nước rút (Sprint)** | Giữ `Shift` | Nút `Left Trigger` / `L3` | Tăng tốc từ $2.7\text{m/s}$ (đi bộ) lên $4.0\text{m/s}$ (nước rút). |
-| **Kéo / Đẩy hộp (Drag)** | Giữ `E` hoặc `Ctrl` cạnh hộp | Nút `X` (Xbox) / `▢` (PS) | Tự động hạ tốc độ còn $1.3\text{m/s}$ để mô phỏng lực cản vật lý $420\text{N}$. |
+| **Move Left/Right** | `A` / `D` or `←` / `→` | D-Pad / Left Stick | Hard-locked to $Z=0.0$, with acceleration/friction-based inertia. |
+| **Jump** | `Space` or `W` / `↑` | `A` (Xbox) / `✕` (PS) | $5.2\text{m/s}$ jump velocity, with Coyote Time ($120\text{ms}$) & Buffer ($150\text{ms}$). |
+| **Sprint** | Hold `Shift` | `Left Trigger` / `L3` | Speeds up from $2.7\text{m/s}$ (walk) to $4.0\text{m/s}$ (sprint). |
+| **Push / Pull box (Drag)** | Hold `E` or `Ctrl` next to a box | `X` (Xbox) / `▢` (PS) | Automatically drops speed to $1.3\text{m/s}$ to convey the weight of the box. |
 
 ---
 
-## 🧩 TỔNG QUAN 6 MODULE KỸ THUẬT CHUYÊN SÂU
+## 🧩 OVERVIEW OF THE 6 CORE TECHNICAL MODULES
 
-Toàn bộ logic được chia thành các script GDScript mô-đun hóa cao, dễ dàng nhúng vào bất kỳ game 2.5D nào:
+All logic is split into highly modular GDScript scripts that drop easily into any 2.5D game.
+
+> ℹ️ **About the numbers:** the values in this README match the defaults in the scripts (`@export` variables you can tune in the Inspector). Every value (speeds, forces, timings, masses) is this toolkit's own tuning target, estimated to approximate the feel of INSIDE. They are **not** values extracted from the original game. See the [verification status](https://github.com/vietanhvu225/inside-engine-deconstruction#-verification-status) of the research repo.
 
 ### 1. 2.5D Character Controller ([`scripts/player/inside_player_controller_25d.gd`](scripts/player/inside_player_controller_25d.gd))
-- Khóa chuyển động nghiêm ngặt trên mặt phẳng 2.5D ($Z = 0$).
-- **Physics Tuning chuẩn Playdead:** Gia tốc mặt đất $18.0\text{ m/s}^2$, lực cản ma sát $22.0$, gia tốc trên không $9.0$.
-- **Gravity Weighting:** Nhân trọng lực $\times 1.35$ khi rơi xuống giúp cú nhảy có sức nặng; giảm trọng lực ($0.6\times$) ở đỉnh nhảy (Apex Damping) tạo cảm giác bay lơ lửng.
+- Strictly constrains movement to the 2.5D plane ($Z = 0$).
+- **Playdead-style physics tuning:** ground acceleration $18.0\text{ m/s}^2$, friction $22.0$, air acceleration $9.0$.
+- **Gravity weighting:** gravity is multiplied by $\times 1.35$ while falling to give jumps weight, and reduced ($0.6\times$) at the apex (Apex Damping) for a floaty hang time.
 
 ### 2. Procedural IK & Stumble ([`scripts/player/procedural_ik_and_stumble.gd`](scripts/player/procedural_ik_and_stumble.gd))
-- **Foot IK:** 2 tia Raycast quét mặt sàn dưới chân để tự động nâng hạ bàn chân theo dốc hoặc bậc thang.
-- **Hand-Snapping:** Khi chạy sát mép tường hoặc chướng ngại vật, nhân vật tự vươn tay chạm nhẹ vào bề mặt.
-- **Stumble:** Tự động phát hiện va chạm tiếp đất từ độ cao lớn ($v_y < -9.5\text{m/s}$) để kích hoạt trạng thái lảo đảo/khụy chân.
+- **Foot IK:** two raycasts probe the ground under the feet to raise and lower each foot on slopes and stairs.
+- **Hand-Snapping:** when running close to a wall or obstacle, the character reaches out and lightly touches the surface.
+- **Stumble:** detects hard landings from height ($v_y < -10.5\text{m/s}$; below $-17.5\text{m/s}$ is a fatal fall) and triggers a stumble/knee-buckle state.
 
 ### 3. Hound / Dog Guard AI ([`scripts/ai/dog_guard_ai_25d.gd`](scripts/ai/dog_guard_ai_25d.gd))
-- **Giác quan kép:** Nón tầm nhìn $65^\circ$ (cự ly $14\text{m}$ có đèn, $4\text{m}$ trong tối) kết hợp cảm biến nghe tiếng bước chân (bán kính $3.5\text{m} - 13.0\text{m}$).
-- **Bầy đàn kẹp góc (Pincer Steering):** Con đầu đàn săn thẳng, con phụ chạy đón đầu phía trước $4.5\text{m}$.
-- **Vồ mồi (Pounce Leap):** Khựng đà $0.22\text{s}$ rồi phóng xung lực $9.0\text{m/s}$ vồ ngã nhân vật.
+- **Dual senses:** a $65^\circ$ vision cone ($14\text{m}$ range when lit, $4\text{m}$ in darkness) combined with footstep hearing (radius $3.5\text{m} - 13.0\text{m}$).
+- **Pincer Steering:** the pack leader chases directly while followers run ahead to cut off the player $4.5\text{m}$ in front.
+- **Pounce Leap:** pauses for $0.22\text{s}$, then launches with a $9.0\text{m/s}$ impulse to knock the player down.
 
-### 4. Thủy Quái Uốn Lượn & Phản Ứng Đèn ([`scripts/ai/water_creature_and_light.gd`](scripts/ai/water_creature_and_light.gd))
-- Mô phỏng bơi lượn uốn khúc chuỗi xương 8 đốt (Verlet Kinematics).
-- Máy trạng thái né ánh sáng: Khi bị đèn pha `SpotLight3D` chiếu trúng, thủy quái quằn quại rung giật và tháo lui $4.2\text{m/s}$ về vùng tối; khi đèn tắt thì lao phục kích $7.8\text{m/s}$.
+### 4. Undulating Water Creature & Light Reaction ([`scripts/ai/water_creature_and_light.gd`](scripts/ai/water_creature_and_light.gd))
+- Simulates sinuous swimming with an 8-segment bone chain (Verlet Kinematics).
+- Light-avoidance state machine: when hit by a `SpotLight3D` beam, the creature writhes and retreats at $4.2\text{m/s}$ into darkness; when the light goes off, it lunges into an ambush at $7.8\text{m/s}$.
 
-### 5. Quái Thể The Huddle Soft-Body ([`scripts/physics/huddle_softbody_controller.gd`](scripts/physics/huddle_softbody_controller.gd))
-- Mô phỏng khối sinh vật biến dạng mềm khối lượng $480\text{kg}$ với mạng lưới 12 lò xo xuyên tâm.
-- Dịch chuyển tâm khối lượng (Center of Mass shift $0.45\text{m}$) tạo mô-men xoay tự lăn $6200\text{N}\cdot\text{m}$, tự động vươn tay bám mặt sàn và húc sập tường chắn vỡ vụn khi động năng $\ge 2600\text{J}$.
+### 5. The Huddle Soft-Body ([`scripts/physics/huddle_softbody_controller.gd`](scripts/physics/huddle_softbody_controller.gd))
+- Simulates a $480\text{kg}$ deformable flesh mass with a network of 12 radial springs.
+- Shifting the center of mass ($0.45\text{m}$) produces a $6200\text{N}\cdot\text{m}$ self-rolling torque; it automatically reaches out to grip the floor and smashes through barrier walls when kinetic energy reaches $\ge 2600\text{J}$.
 
 ### 6. Cinematic Camera & Level Streaming
-- [`scripts/camera/cinematic_camera_trigger.gd`](scripts/camera/cinematic_camera_trigger.gd): Vùng kích hoạt chuyển góc máy mượt mà (chuyển đổi FOV, cự ly Z và khóa trục camera tĩnh).
-- [`scripts/systems/level_streaming_manager.gd`](scripts/systems/level_streaming_manager.gd): Quản lý nạp trước màn chơi con ngầm đa luồng ở cự ly $35\text{m}$ và giải phóng ở cự ly $55\text{m}$, triệt tiêu 100% hiện tượng khựng khung hình.
+- [`scripts/camera/cinematic_camera_trigger.gd`](scripts/camera/cinematic_camera_trigger.gd): trigger zones for smooth camera transitions (FOV changes, Z distance and locked static camera axes).
+- [`scripts/systems/level_streaming_manager.gd`](scripts/systems/level_streaming_manager.gd): multithreaded preloading of sub-levels at $35\text{m}$ and unloading at $55\text{m}$, designed to avoid frame hitches during level transitions.
 
 ---
 
-## 🎨 BỘ 3 SHADERS THẨM MỸ "PLAYDEAD LOOK"
+## 🎨 THE 3 "PLAYDEAD LOOK" SHADERS
 
-1. [`shaders/playdead_palette.gdshader`](shaders/playdead_palette.gdshader): Ánh xạ ảnh thang độ xám (Grayscale) sang bảng màu gradient 1D (Palette LUT), mang lại tông màu u tối, lạnh lẽo đặc trưng.
-2. [`shaders/fake_bounce_light.gdshader`](shaders/fake_bounce_light.gdshader): Giả lập tia sáng gián tiếp hắt ngược từ mặt sàn lên phần dưới cơ thể nhân vật mà không tốn chi phí chiếu sáng toàn cục (GI).
-3. [`shaders/volumetric_fog_dither.gdshader`](shaders/volumetric_fog_dither.gdshader): Sương mù thể tích kèm ma trận Bayer 4x4 dither giúp loại bỏ triệt để hiện tượng vệt sọc màu (Color Banding) trong bóng tối.
-
----
-
-## 🤖 HỆ SINH THÁI MCP & AI PAIR-PROGRAMMING (ANTIGRAVITY / CURSOR)
-
-Bộ công cụ này được thiết kế theo tư duy **AI-Native Game Development**: lập trình viên phát triển song hành cùng AI Agent (Google Antigravity, Cursor, Claude Code) thông qua giao thức mở **Model Context Protocol (MCP)**.
-
-### 🔍 5.1. Hành Trình Tuyển Chọn Giải Pháp MCP (Từ Gốc Đến Đích)
-
-Để tìm ra giải pháp tối ưu cho Godot 4.7+, chúng tôi đã thực hiện nghiên cứu chuyên sâu qua 2 vòng sàng lọc khắt khe:
-
-* **Vòng 1 (GitHub Ecosystem Scan):** Khảo sát các repo MCP độc lập phổ biến (`Coding-Solo/godot-mcp`, `hi-godot/godot-ai`, `ee0pdt/Godot-MCP`, `IvanMurzak/Godot-MCP`). Nhận thấy đa số giải pháp chỉ hỗ trợ Godot 4.2/4.3 cũ, thiếu cơ chế xác thực hoặc thiếu UI tương tác trực quan trong Editor.
-* **Vòng 2 (Official Godot Asset Library Deep-Dive):** Quét toàn bộ các công cụ đã qua kiểm duyệt trên Godot Asset Library (#5086, #5375, #5369, #5193, #5482, #5522). Phát hiện ra các giải pháp thế hệ mới đột phá về độ tương thích Godot 4.7+, tính an toàn và khả năng gỡ lỗi.
+1. [`shaders/playdead_palette.gdshader`](shaders/playdead_palette.gdshader): maps grayscale onto a 1D gradient palette (Palette LUT) for the signature dark, cold tones.
+2. [`shaders/fake_bounce_light.gdshader`](shaders/fake_bounce_light.gdshader): fakes indirect light bouncing off the floor onto the character's lower body without the cost of global illumination (GI).
+3. [`shaders/volumetric_fog_dither.gdshader`](shaders/volumetric_fog_dither.gdshader): volumetric fog with 4x4 Bayer-matrix dithering to eliminate color banding in dark areas.
 
 ---
 
-### 📊 5.2. BẢNG SO SÁNH ROUND 2 VỚI CÁC ỨNG VIÊN ROUND 1
+## 🤖 MCP ECOSYSTEM & AI PAIR-PROGRAMMING (ANTIGRAVITY / CURSOR)
 
-| Tiêu chí kỹ thuật | `fredarts/gamedev_ai` (#5086) ⭐ | `NPGameDev/godot-mcp-toolkit` (#5375) | `TomasLucas/godot-mcp-bridge` (#5369) | `wgt19861219/godot-mcp-enhanced` (#5193) | `hi-godot/godot-ai` (Round 1) |
+This toolkit is designed around **AI-Native Game Development**: developers work side by side with AI agents (Google Antigravity, Cursor, Claude Code) through the open **Model Context Protocol (MCP)**.
+
+> ℹ️ **MCP is optional.** The game runs without it. The MCP addon (`gamedev_ai`) is **not bundled** in this repo; install it yourself by following [5.5](#-55-configuring-mcp-for-antigravity--cursor) if you want AI-agent integration.
+>
+> The tool comparison below reflects a survey done in October 2026. Version support, tool counts and features change quickly, so check each project's own docs before relying on them.
+
+### 🔍 5.1. How the MCP Solution Was Chosen
+
+To find the best option for Godot 4.7+, we ran an in-depth survey in two rounds of screening:
+
+* **Round 1 (GitHub ecosystem scan):** surveyed popular standalone MCP repos (`Coding-Solo/godot-mcp`, `hi-godot/godot-ai`, `ee0pdt/Godot-MCP`, `IvanMurzak/Godot-MCP`). Most only supported older Godot 4.2/4.3, lacked authentication, or had no interactive UI inside the Editor.
+* **Round 2 (Official Godot Asset Library deep-dive):** scanned the reviewed tools on the Godot Asset Library (#5086, #5375, #5369, #5193, #5482, #5522). Found a newer generation of tools with much better Godot 4.7+ compatibility, safety and debugging.
+
+---
+
+### 📊 5.2. ROUND 2 VS. ROUND 1 CANDIDATES
+
+| Technical criterion | `fredarts/gamedev_ai` (#5086) ⭐ | `NPGameDev/godot-mcp-toolkit` (#5375) | `TomasLucas/godot-mcp-bridge` (#5369) | `wgt19861219/godot-mcp-enhanced` (#5193) | `hi-godot/godot-ai` (Round 1) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Độ tương thích Godot 4.7.2** | **⭐⭐⭐⭐⭐ (Native 4.7+)** | ⭐⭐⭐⭐☆ (4.2+) | ⭐⭐⭐⭐☆ (4.5+) | ⭐⭐⭐⭐☆ (4.3+) | ⭐⭐⭐⭐☆ (4.3+) |
-| **Kiểm duyệt trên Asset Library** | **✅ Có (ID 5086)** | **✅ Có (ID 5375)** | **✅ Có (ID 5369)** | **✅ Có (ID 5193)** | ❌ Chưa (GitHub only) |
-| **Giao diện Editor UI tích hợp** | **✅ AI Dock + Visual Diff** | ❌ Không (Thuần MCP) | ❌ Không (Thuần MCP) | ⚠️ Dock tối giản | ⚠️ Chỉ có status dock |
-| **Khả năng Step-Debugging** | ⚠️ Đọc log console | ⚠️ Đọc log console | **✅ Đặt Breakpoint DAP** | ⚠️ QA Assertions & GIF | ⚠️ Đọc log console |
-| **Tối ưu hóa Token LLM** | ⭐⭐⭐⭐☆ (30+ Tools) | ⭐⭐⭐☆☆ (150+ Tools) | ⭐⭐⭐☆☆ (231 Tools) | ⭐⭐⭐⭐☆ (46 Tools/272 Actions) | **⭐⭐⭐⭐⭐ (Domain Rollups)** |
-| **Hỗ trợ Antigravity rõ ràng** | **✅ Nêu danh trong Docs** | ✅ Tương thích chung | ✅ Tương thích chung | ✅ Tương thích chung | ✅ Tương thích chung |
-| **Trọng tâm kiến trúc** | **Authoring + Safe Diff + Watch Mode** | Pure MCP Operations | Bi-directional Awareness + DAP | Closed-Loop QA + Auto GIF | Token-optimized Viewport |
+| **Godot 4.7.2 compatibility** | **⭐⭐⭐⭐⭐ (Native 4.7+)** | ⭐⭐⭐⭐☆ (4.2+) | ⭐⭐⭐⭐☆ (4.5+) | ⭐⭐⭐⭐☆ (4.3+) | ⭐⭐⭐⭐☆ (4.3+) |
+| **Reviewed on Asset Library** | **✅ Yes (ID 5086)** | **✅ Yes (ID 5375)** | **✅ Yes (ID 5369)** | **✅ Yes (ID 5193)** | ❌ No (GitHub only) |
+| **Integrated Editor UI** | **✅ AI Dock + Visual Diff** | ❌ No (pure MCP) | ❌ No (pure MCP) | ⚠️ Minimal dock | ⚠️ Status dock only |
+| **Step-debugging** | ⚠️ Reads console log | ⚠️ Reads console log | **✅ DAP breakpoints** | ⚠️ QA Assertions & GIF | ⚠️ Reads console log |
+| **LLM token efficiency** | ⭐⭐⭐⭐☆ (30+ tools) | ⭐⭐⭐☆☆ (150+ tools) | ⭐⭐⭐☆☆ (231 tools) | ⭐⭐⭐⭐☆ (46 tools/272 actions) | **⭐⭐⭐⭐⭐ (Domain Rollups)** |
+| **Explicit Antigravity support** | **✅ Named in docs** | ✅ General compatibility | ✅ General compatibility | ✅ General compatibility | ✅ General compatibility |
+| **Architectural focus** | **Authoring + Safe Diff + Watch Mode** | Pure MCP Operations | Bi-directional Awareness + DAP | Closed-Loop QA + Auto GIF | Token-optimized Viewport |
 
 ---
 
-### 🎯 5.3. Rationale: Tại Sao Chọn `fredarts/gamedev_ai` (#5086) Làm Giải Pháp Trọng Tâm?
+### 🎯 5.3. Rationale: Why `fredarts/gamedev_ai` (#5086) Is the Core Choice
 
-1. **Khớp phiên bản 100% (Godot 4.7+):** Đây là công cụ hiếm hoi trên Asset Library gắn nhãn chính thức hỗ trợ **Godot 4.7+**, không bị lỗi deprecation warning của GDScript mới.
-2. **Hỗ trợ chính thức Google Antigravity & Cursor:** Tài liệu kỹ thuật của tác giả ghi nhận chuẩn Stdio Bridge qua file Python `godot_mcp.py` kết nối trực tiếp vào JSON-RPC Server nội bộ cổng `6543`.
-3. **Mô hình "Dual-Workspace" an toàn nhất:**
-   - **Bên ngoài:** Antigravity có thể tự động tạo node, nối signal, sửa script theo vùng chọn.
-   - **Bên trong:** Godot hiển thị bảng **Safe Visual Diff** (màu xanh/đỏ) để bạn bấm `Accept` hoặc `Reject` trước khi áp dụng, kèm **Watch Mode** tự động phát hiện lỗi crash ở tab Output để đề xuất sửa lỗi tức thì.
+1. **100% version match (Godot 4.7+):** one of the few Asset Library tools officially tagged for **Godot 4.7+**, with no deprecation warnings from the new GDScript.
+2. **Official Google Antigravity & Cursor support:** the author's docs describe a standard stdio bridge via the Python file `godot_mcp.py`, connecting directly to an internal JSON-RPC server on port `6543`.
+3. **The safest "Dual-Workspace" model:**
+   - **Outside:** Antigravity can create nodes, connect signals and edit scripts within a selection automatically.
+   - **Inside:** Godot shows a **Safe Visual Diff** panel (green/red) so you can `Accept` or `Reject` changes before they apply, plus a **Watch Mode** that catches crashes in the Output tab and proposes fixes immediately.
 
 ---
 
-### 🛡️ 5.4. Công Cụ Đồng Hành Quản Trị Git & LFS: `Gitot` (Asset #5522)
+### 🛡️ 5.4. Companion Git & LFS Tool: `Gitot` (Asset #5522)
 
-Trong quá trình khảo sát, chúng tôi phân tích công cụ [**`SigKdev/godot-gitot`**](https://github.com/SigKdev/godot-gitot) ([Godot Asset Library #5522](https://godotengine.org/asset-library/asset/5522)) và xác định đây là **mảnh ghép quản trị phiên bản tối quan trọng** khi làm game trên Godot 4.7.2:
+During the survey we analysed [**`SigKdev/godot-gitot`**](https://github.com/SigKdev/godot-gitot) ([Godot Asset Library #5522](https://godotengine.org/asset-library/asset/5522)) and identified it as a **critical version-control piece** for game development on Godot 4.7.2:
 
-#### 1. Bản chất & Nỗi đau của Godot VCS mặc định:
-* Godot có hệ thống Git tích hợp sẵn (`godot-git-plugin`), nhưng dựa trên thư viện C++ `libgit2`. Plugin này nổi tiếng là thường xuyên bị crash hoặc hỏng kết nối mỗi khi Godot ra bản cập nhật mới, đồng thời việc cấu hình SSH Key trên Windows rất phức tạp.
-* **Giải pháp của Gitot:** Viết bằng **100% thuần GDScript (Pure GDScript)**, tương tác thẳng với file `git.exe` của hệ điều hành thông qua lệnh `OS.execute()`. Do đó, nếu terminal trên máy bạn gõ được lệnh `git`, Gitot sẽ chạy ngay lập tức mà không cần cấu hình lại SSH hay token.
+#### 1. The problem with Godot's default VCS:
+* Godot ships with built-in Git (`godot-git-plugin`), but it is based on the C++ library `libgit2`. The plugin is known to crash or lose its connection whenever Godot updates, and configuring SSH keys on Windows is painful.
+* **Gitot's approach:** written in **100% pure GDScript**, it calls the OS `git.exe` directly via `OS.execute()`. If `git` works in your terminal, Gitot works immediately with no SSH or token reconfiguration.
 
-#### 2. Bộ 5 tính năng "cứu cánh" cho Game Developer & AI Workflow:
-1. **Large-File Guard & Git LFS tự động:** Khi làm game, dev thường kéo thả các file 3D (`.blend`, `.obj`), âm thanh (`.wav`) hoặc texture nặng từ $50\text{MB} - 500\text{MB}$. Gitot có cơ chế tự động chặn không cho commit file vượt ngưỡng quy định vào Git thường (tránh làm nổ dung lượng repo), đồng thời cung cấp nút **"Track with LFS"** 1-click.
-2. **Color Diff Gutter thời gian thực:** Lề trái của trình soạn thảo mã nguồn Godot (Gutter) tự động đổi màu: **xanh lá** cho dòng mới viết, **cam** cho dòng AI vừa sửa. Bấm vào vạch màu là mở ngay bảng so sánh Unified Diff chi tiết.
-3. **Chuyển nhánh tự động làm mới Scene (Branch Switch Auto-Reload):** Khi chuyển đổi qua lại giữa các branch tính năng, các file Scene (`.tscn`) đang mở sẽ tự động nạp lại trạng thái mới mà không bắt buộc bạn phải khởi động lại Godot.
-4. **Stash Manager (Shelf):** Cho phép "cất nháp" toàn bộ thay đổi thử nghiệm của AI vào ngăn kéo an toàn chỉ với 1 cú click.
-5. **Độ tin cậy được kiểm chứng:** Phiên bản v0.17.0 được xây dựng và kiểm thử trực tiếp trên đúng bản **Godot 4.7.2**, vượt qua bộ test tự động [GdUnit4](https://github.com/MikeSchulze/gdUnit4) với **22 test suites, 179 tests, 0 failures**.
+#### 2. Five lifesaving features for game developers & AI workflows:
+1. **Large-File Guard & automatic Git LFS:** game devs often drag in heavy 3D files (`.blend`, `.obj`), audio (`.wav`) or textures of $50\text{MB} - 500\text{MB}$. Gitot blocks commits of files over a set threshold into regular Git (so the repo doesn't balloon) and offers a 1-click **"Track with LFS"** button.
+2. **Real-time color diff gutter:** the left gutter of Godot's script editor changes color, **green** for newly written lines and **orange** for lines the AI just edited. Click a marker to open a detailed unified diff.
+3. **Branch Switch Auto-Reload:** when switching between feature branches, open scene files (`.tscn`) reload to the new state without restarting Godot.
+4. **Stash Manager (Shelf):** shelve all of the AI's experimental changes safely in one click.
+5. **Proven reliability:** v0.17.0 was built and tested directly on **Godot 4.7.2** and passes the [GdUnit4](https://github.com/MikeSchulze/gdUnit4) automated suite with **22 test suites, 179 tests, 0 failures**.
 
 > [!TIP]
-> **Mô hình phối hợp chuẩn mực cho dự án:**
-> - **Lập trình & Điều khiển AI (MCP):** [`fredarts/gamedev_ai`](https://github.com/fredarts/gamedev_ai) (Kết nối Antigravity qua cổng `6543`).
-> - **Quản trị mã nguồn & Bảo vệ dung lượng (VCS):** [`SigKdev/godot-gitot`](https://github.com/SigKdev/godot-gitot) (Quản trị commit, LFS và diff trực tiếp trong Godot).
+> **Recommended setup for this project:**
+> - **Coding & AI control (MCP):** [`fredarts/gamedev_ai`](https://github.com/fredarts/gamedev_ai) (connects to Antigravity on port `6543`).
+> - **Source control & size protection (VCS):** [`SigKdev/godot-gitot`](https://github.com/SigKdev/godot-gitot) (commits, LFS and diffs right inside Godot).
 
 ---
 
-### ⚙️ 5.5. Hướng Dẫn Cấu Hình MCP Cho Antigravity / Cursor
+### ⚙️ 5.5. Configuring MCP for Antigravity / Cursor
 
-1. Đảm bảo máy tính đã cài Python 3.10+ (hoặc trỏ tới đường dẫn Python trên máy bạn).
-2. Mở file cấu hình MCP của IDE (ví dụ: `mcp_config.json`):
+1. **Install the addon (not included in this repo):** in Godot, open the **AssetLib** tab, search for `gamedev_ai` ([Asset #5086](https://godotengine.org/asset-library/asset/5086)), download it and install into `addons/gamedev_ai/`. Then enable it under **Project → Project Settings → Plugins**. Check that `addons/gamedev_ai/mcp/godot_mcp.py` exists; if the addon's layout differs, adjust the path in the config below.
+2. Make sure Python 3.10+ is installed (or point to the Python path on your machine).
+3. Open your IDE's MCP config file (e.g. `mcp_config.json`):
 
 ```json
 {
@@ -178,19 +187,19 @@ Trong quá trình khảo sát, chúng tôi phân tích công cụ [**`SigKdev/go
 }
 ```
 
-3. Khởi động plugin trong Godot: AI Agent bên ngoài sẽ tự động nhận diện cây Scene Tree đang mở, hỗ trợ tạo Node, kiểm tra lỗi LSP thời gian thực và đồng hành cùng bạn!
+4. With the plugin running in Godot, the external AI agent can read the open Scene Tree, help create nodes and check LSP errors in real time.
 
 
 ---
 
-## 📂 CẤU TRÚC THƯ MỤC DỰ ÁN
+## 📂 PROJECT STRUCTURE
 
 ```text
 godot-25d-cinematic-toolkit/
-├── project.godot                  # File cấu hình engine Godot 4.7
-├── mcp_config.json                # Cấu hình kết nối MCP cho AI Agent
+├── project.godot                  # Godot 4.7 engine config
+├── mcp_config.json                # MCP config for AI agents (needs the optional gamedev_ai addon, not bundled)
 ├── scenes/
-│   └── test_gym.tscn              # Màn chơi thử nghiệm vật lý & camera
+│   └── test_gym.tscn              # Physics & camera test level
 ├── scripts/
 │   ├── player/
 │   │   ├── inside_player_controller_25d.gd
@@ -215,11 +224,13 @@ godot-25d-cinematic-toolkit/
 
 ---
 
-## 📚 TÀI LIỆU KỸ THUẬT ĐI KÈM
+## 📚 COMPANION TECHNICAL DOCS
 
-- 📖 [**INSIDE Advanced Systems Bible**](docs/INSIDE_ADVANCED_SYSTEMS_BIBLE.md): Toàn bộ công thức toán học, sơ đồ tuần tự Mermaid, giải thích từng hệ số vật lý.
-- 📖 [**Godot MCP Comprehensive Analysis**](docs/GODOT_MCP_COMPREHENSIVE_ANALYSIS.md): Báo cáo đánh giá so sánh các giải pháp MCP (gamedev_ai, godot-mcp-enhanced, gitot).
-- 🔬 [**Hồ Sơ Reverse Engineering Gốc (Repo 1)**](https://github.com/vietanhvu225/inside-engine-deconstruction): Kết quả bóc tách nhị phân và giải mã FSM PlayMaker của game gốc.
+- 📖 [**INSIDE Advanced Systems Bible**](docs/INSIDE_ADVANCED_SYSTEMS_BIBLE.md): all the math formulas, Mermaid sequence diagrams and an explanation of every physics coefficient.
+- 📖 [**Godot MCP Comprehensive Analysis**](docs/GODOT_MCP_COMPREHENSIVE_ANALYSIS.md): comparative evaluation of MCP solutions (gamedev_ai, godot-mcp-enhanced, gitot).
+- 🔬 [**Original Reverse Engineering Archive (Repo 1)**](https://github.com/vietanhvu225/inside-engine-deconstruction): binary teardown results and decoded PlayMaker FSMs from the original game.
+
+> Note: the companion docs are currently written in Vietnamese.
 
 ---
-*Phát triển và bảo trì bởi vietanhvu225. Giấy phép MIT License - Tự do sử dụng cho mục đích cá nhân và thương mại.*
+*Developed and maintained by vietanhvu225. MIT License: free for personal and commercial use.*
